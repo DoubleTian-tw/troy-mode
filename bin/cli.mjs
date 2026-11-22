@@ -135,9 +135,12 @@ function createDirSymlink(target, linkPath) {
   fs.symlinkSync(target, linkPath, type);
 }
 
-function backupPath(targetPath) {
+function backupExisting(targetPath) {
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-  return `${targetPath}.bak.${stamp}`;
+  const skillsDir = path.dirname(targetPath);
+  const backupRoot = path.join(path.dirname(skillsDir), '.troy-mode-backups', stamp);
+  fs.mkdirSync(backupRoot, { recursive: true });
+  fs.renameSync(targetPath, path.join(backupRoot, path.basename(targetPath)));
 }
 
 function removeEntry(targetPath) {
@@ -165,7 +168,7 @@ function prepareCanonicalSkill(skillName, canonicalDir, { mode, force, dryRun })
       }
       if (!dryRun) {
         if (!existing.isSymbolicLink() && force) {
-          fs.renameSync(destDir, backupPath(destDir));
+          backupExisting(destDir);
         } else {
           removeEntry(destDir);
         }
@@ -189,7 +192,7 @@ function prepareCanonicalSkill(skillName, canonicalDir, { mode, force, dryRun })
       // Updating previously copied directory: safe to replace unless we want backup on --force
       if (!dryRun) {
         if (force) {
-          fs.renameSync(destDir, backupPath(destDir));
+          backupExisting(destDir);
         } else {
           fs.rmSync(destDir, { recursive: true, force: true });
         }
@@ -217,7 +220,7 @@ function linkAgentSkill(skillName, canonicalDir, agentDir, { force, dryRun }) {
     }
     if (!dryRun) {
       if (!existing.isSymbolicLink() && force) {
-        fs.renameSync(linkPath, backupPath(linkPath));
+        backupExisting(linkPath);
       } else {
         removeEntry(linkPath);
       }
