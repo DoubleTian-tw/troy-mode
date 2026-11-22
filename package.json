@@ -4,7 +4,7 @@
   "description": "Cross-project AI Agent workflow playbook and skills toolkit for Claude Code, Codex, and Gemini / Antigravity.",
   "type": "module",
   "bin": {
-    "troy-mode": "./bin/cli.mjs"
+    "troy-mode": "bin/cli.mjs"
   },
   "scripts": {
     "validate": "node scripts/validate.mjs",
