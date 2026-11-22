@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Cross-project AI Agent workflow playbook and skills toolkit for Claude Code, Codex, and Gemini / Antigravity.",
   "type": "module",
+  "bin": {
+    "troy-mode": "./bin/cli.mjs"
+  },
   "license": "MIT",
   "author": {
     "name": "Troy",
@@ -26,7 +29,10 @@
     "troy-mode"
   ],
   "files": [
+    "bin/",
     "skills/",
+    "plugin.json",
+    ".claude-plugin/",
     "README.md",
     "LICENSE"
   ],
