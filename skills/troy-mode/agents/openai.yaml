@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Mode"
+  short_description: "個人跨專案工作流總入口（Playbook Router）"
+  default_prompt: "Use $troy-mode to route this task to the right troy-* workflow."

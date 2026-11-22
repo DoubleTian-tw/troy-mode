@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Teach Me"
+  short_description: "蘇格拉底式技術導師與 Review 白話講解"
+  default_prompt: "Use $troy-teach-me to guide me through this concept or explain this code."

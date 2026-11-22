@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Blast Radius"
+  short_description: "查核 grep 看不到的隱性依賴並實證安全假設"
+  default_prompt: "Use $troy-blast-radius to uncover hidden coupling and verify safety assumptions."

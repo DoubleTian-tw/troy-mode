@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Grilling"
+  short_description: "依設計樹多輪深度盤問未定決策"
+  default_prompt: "Use $troy-grilling to stress-test this plan and resolve open decisions."

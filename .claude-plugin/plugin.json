@@ -1,0 +1,13 @@
+{
+  "name": "troy-mode",
+  "version": "0.1.0",
+  "description": "Cross-project AI Agent workflow playbook and thinking skills for Claude Code, Codex, and Gemini / Antigravity.",
+  "author": {
+    "name": "Troy",
+    "url": "https://github.com/DoubleTian-tw"
+  },
+  "homepage": "https://github.com/DoubleTian-tw/troy-mode",
+  "repository": "https://github.com/DoubleTian-tw/troy-mode",
+  "license": "MIT",
+  "skills": "./skills/"
+}

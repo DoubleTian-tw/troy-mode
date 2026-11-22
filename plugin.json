@@ -1,0 +1,10 @@
+{
+  "name": "troy-mode",
+  "description": "Cross-project AI Agent workflow playbook and skills toolkit in Traditional Chinese.",
+  "author": {
+    "name": "Troy",
+    "url": "https://github.com/DoubleTian-tw"
+  },
+  "homepage": "https://github.com/DoubleTian-tw/troy-mode",
+  "repository": "https://github.com/DoubleTian-tw/troy-mode"
+}

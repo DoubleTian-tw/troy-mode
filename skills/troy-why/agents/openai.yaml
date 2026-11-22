@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Why"
+  short_description: "從 Git 與歷史文件追查設計原因與取捨"
+  default_prompt: "Use $troy-why to trace the historical design rationale from git and docs."

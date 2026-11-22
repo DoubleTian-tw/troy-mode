@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy How"
+  short_description: "唯讀追蹤呼叫鏈、模組邊界與 State Owner"
+  default_prompt: "Use $troy-how to trace how this subsystem works with file:line evidence."

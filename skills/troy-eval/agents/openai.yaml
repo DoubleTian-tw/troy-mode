@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Eval"
+  short_description: "雙盲 A/B 評測 skill 與規則改動效果"
+  default_prompt: "Use $troy-eval to run a double-blind A/B evaluation on this skill change."
