@@ -17,7 +17,7 @@ disable-model-invocation: true
 3. **不靠看現在的 code 硬編理由**：必須去翻引入與修改該段程式的紀錄：
    - Git 歷史：`git log -n 15 --oneline <path>`、`git log -S "<關鍵符號>" -p`、`git blame <file>` + `git show <commit>`
    - PR / MR 紀錄（若有 `gh` / `glab` 或 commit merge 訊息）
-   - 專案內既有決策／歷史歸檔文件（自動偵測常見路徑：如 `docs/changes/_archive/`、`docs/epics/_archive/`、`docs/features/`、`openspec/`、`docs/decisions/`、`ADR` 等）
+   - 專案內既有決策／歷史歸檔文件（自動偵測常見路徑：如 `docs/decisions/`、`ADR/`、`docs/specs/`、`docs/changes/`、`docs/features/`、`CHANGELOG.md` 等）
 4. **誠實標記不確定性**：紀錄裡寫了什麼就引什麼；自己的合理推論**必須明寫 `[推論]`**；歷史紀錄沒寫的原因就直接講「紀錄未說明」，絕不腦補成既定事實。
 
 ## 輸出格式

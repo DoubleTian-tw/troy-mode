@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 找出一個改動或 Diff 在「改動範圍之外」可能打壞什麼，並**用真實執行證據（而非紙上談兵）**證明關鍵假設到底安不安全。
 
-> 搭配 `troy-how`（理解運作）與 `troy-why`（理解動機）使用：`troy-blast-radius` 專抓「靠 grep 找不到」的隱性破壞點。
+> 若存在 `~/.agents/CONTEXT.md`，先讀取並遵守其語言與術語規範。搭配 `troy-how`（理解運作）與 `troy-why`（理解動機）使用效果最佳（若未安裝則獨立執行）：`troy-blast-radius` 專抓「靠 grep 找不到」的隱性破壞點。
 
 ## 核心原則：不信任自己寫得很好聽的分析
 
