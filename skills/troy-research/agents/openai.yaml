@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Research"
+  short_description: "Research questions with traceable sources"
+  default_prompt: "Use $troy-research to investigate this question with traceable sources."

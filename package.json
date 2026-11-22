@@ -1,0 +1,24 @@
+{
+  "name": "troy-mode",
+  "version": "0.1.0",
+  "description": "Cross-project AI Agent workflow playbook and skills toolkit for Claude Code, Codex, and Gemini / Antigravity.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "ai-workflow",
+    "claude-code",
+    "codex",
+    "gemini",
+    "antigravity",
+    "troy-mode"
+  ],
+  "files": [
+    "skills/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

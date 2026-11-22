@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Wait What"
+  short_description: "將上一段回答改成白話說明"
+  default_prompt: "Use $troy-wait-what to explain the previous response in plain Traditional Chinese."
