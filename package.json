@@ -6,6 +6,10 @@
   "bin": {
     "troy-mode": "./bin/cli.mjs"
   },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "node scripts/validate.mjs"
+  },
   "license": "MIT",
   "author": {
     "name": "Troy",
