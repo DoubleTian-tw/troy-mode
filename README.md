@@ -2,7 +2,7 @@
 
 跨專案 AI Agent 工作流工具包（台灣繁體中文為主），同時相容 **Claude Code**、**Codex** 與 **Gemini / Antigravity**。
 
-以 `troy-mode` 作為 Playbook 總路由，依任務性質分流至 8 個專責 Skill，落實「先理解再動手、證據優先、雙盲驗證」的工程工作流。
+以 `troy-mode` 作為 Playbook 總路由，依任務性質分流至 12 個專責 Skill，落實「先理解再動手、證據優先、雙盲驗證」的工程工作流。
 
 ## 安裝方式
 
@@ -29,7 +29,7 @@ npx troy-mode uninstall
 
 - `--scope <global|project>`：安裝範圍（預設 `global`）
 - `--agents <list>`：`claude,codex,gemini` 逗號分隔（預設全部）
-- `--skills <list>`：指定要安裝的 skill（預設全部 9 個）
+- `--skills <list>`：指定要安裝的 skill（預設全部 13 個）
 - `--mode <copy|link>`：`copy` 複製實體檔案（預設）；`link` 連回本機 repo 供開發同步
 - `--force`：遇到同名非 symlink 目錄時先備份再覆蓋
 - `--dry-run`：只預覽動作，不寫入檔案
@@ -70,6 +70,10 @@ agy plugin install https://github.com/DoubleTian-tw/troy-mode
 | `troy-teach-me` | 觀念採蘇格拉底式引導；Review 採白話直解 + 漸進小圖 | 自動 / 手動 |
 | `troy-wait-what` | 將上一段難懂的 AI 回覆用台灣繁中白話重述 | 手動 |
 | `troy-eval` | 雙盲 A/B 評測工作流程，驗證 skill／規範改動前後差異 | 手動 |
+| `troy-interrogate` | 在獨立臨時 worktree 平行實跑 repro 打壞改動，只保留實測失敗項 | 手動 |
+| `troy-correct` | 歸類重複 ≥ 2 次的錯誤，按架構→型別→Lint→測試堵洞並紅燈反證 | 手動 |
+| `troy-create-verify` | 讀專案原始碼建立或健檢更新 `verify-<app>` 實機驗證腳本與功能地圖 | 手動 |
+| `troy-unslop` | 清理文件、PR 說明與文章裡的 AI 腔與空洞套話，保留技術原意 | 手動 |
 
 ## 本機開發與驗證
 

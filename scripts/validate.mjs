@@ -17,6 +17,10 @@ const MANUAL_ONLY_SKILLS = new Set([
   'troy-blast-radius',
   'troy-wait-what',
   'troy-eval',
+  'troy-interrogate',
+  'troy-correct',
+  'troy-create-verify',
+  'troy-unslop',
 ]);
 
 const errors = [];

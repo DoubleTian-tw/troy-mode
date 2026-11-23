@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Interrogate"
+  short_description: "在獨立 worktree 實跑 repro 試圖打壞改動，只保留實測失敗的問題"
+  default_prompt: "Use $troy-interrogate to run adversarial repro verification against the current changes."

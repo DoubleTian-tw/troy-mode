@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Unslop"
+  short_description: "清理文件、PR 說明與文章裡的 AI 腔與空洞套話，保留技術原意"
+  default_prompt: "Use $troy-unslop to remove AI tells and tighten this prose without changing technical facts."

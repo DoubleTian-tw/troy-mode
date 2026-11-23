@@ -1,6 +1,6 @@
 ---
 name: troy-mode
-description: Troy 個人跨專案工作流總入口（Playbook Router）。依目前任務性質自動分流至最合適的 troy-* skill（研究、追程式流、查歷史理由、評估爆炸半徑、深度盤問、教學講解、白話重述），並落實證據優先紀律。使用 `/troy-mode`、`$troy-mode` 或「用 troy 模式處理」時觸發。
+description: Troy 個人跨專案工作流總入口（Playbook Router）。依目前任務性質自動分流至最合適的 troy-* skill（研究、追程式流、查歷史理由、評估爆炸半徑、深度盤問、教學講解、白話重述、對抗實跑找碴、結構防呆、專案實機驗證、完稿去 AI 腔、雙盲評測），並落實證據優先紀律。使用 `/troy-mode`、`$troy-mode` 或「用 troy 模式處理」時觸發。
 disable-model-invocation: true
 ---
 
@@ -22,6 +22,10 @@ disable-model-invocation: true
 | **學觀念**（蘇格拉底反問）或 **Review 快速白話講懂** | `troy-teach-me` | 觀念採反問引導；Review 採漸進小圖 + 平行 `troy-how` / `troy-why` |
 | 剛才 AI 的回答太難懂／跳步，要求**白話重講** | `troy-wait-what` | 唯讀重述上一段回覆，不擴張執行 |
 | 驗證 skill／規範改動前後**實際行為差異** | `troy-eval` | 建立去識別化雙盲對照環境、平行實跑並交由匿名裁判評分 |
+| 高風險改動寫完後，派找碴 AI **實跑把程式弄壞** | `troy-interrogate` | 建臨時 worktree 實跑 repro 驗證；只報真實失敗，不改主工作區 |
+| 發現 AI／團隊**重複犯同一類錯（≥ 2 次）**，從根本堵洞 | `troy-correct` | 按架構→型別→Lint→測試階梯提案防呆，確認後實作並紅燈反證 |
+| 替專案建立或改版更新**實機操作驗證腳本（`verify-*`）** | `troy-create-verify` | 讀懂專案啟動與操作面，產出／健檢 `verify-<app>` 與功能地圖 |
+| 文件、PR 說明、README 或文章完稿後**去 AI 腔潤稿** | `troy-unslop` | 移除空洞形容詞、翻譯腔與 AI 句型，保留技術事實與台灣自然語感 |
 
 ## 通用執行紀律（所有路由共用）
 

@@ -21,7 +21,7 @@ skills/<skill-name>/
 
 1. **命名一致**：資料夾名稱、Frontmatter `name`、`skills/troy-mode/SKILL.md` 路由表三者必須 **100% 字串一致**（`kebab-case`，一律以 `troy-` 開頭）。
 2. **觸發權限分類**：
-   - 唯讀查證、總路由、重述與評測類（`troy-mode`, `troy-how`, `troy-why`, `troy-blast-radius`, `troy-wait-what`, `troy-eval`）必須宣告 `disable-model-invocation: true`，避免平常對話誤觸發。
+   - 唯讀查證、總路由、重述、評測與重型驗證／根治／潤稿類（`troy-mode`, `troy-how`, `troy-why`, `troy-blast-radius`, `troy-wait-what`, `troy-eval`, `troy-interrogate`, `troy-correct`, `troy-create-verify`, `troy-unslop`）必須宣告 `disable-model-invocation: true`，避免平常對話誤觸發。
    - 互動引導與研究類（`troy-grilling`, `troy-research`, `troy-teach-me`）保留自動觸發，並須在 `description` 寫明清楚的觸發時機與關鍵詞。
 3. **Codex Metadata**：每個 Skill 皆須補齊 `agents/openai.yaml`（含 `display_name`、`short_description`、`default_prompt`）。
 

@@ -79,7 +79,7 @@ function printHelp(pkg) {
   install     安裝 troy-* skills 到本機或專案（預設指令）
   uninstall   安全移除由本套件管理的 troy-* skills
   status      檢查目前安裝狀態與 symlink 指向
-  list        列出內建的 9 個 skills
+  list        列出內建的所有 troy-* skills
 
 選項：
   --scope <global|project>   安裝範圍（預設：global）

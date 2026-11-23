@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Correct"
+  short_description: "抓重複犯錯並按架構→型別→Lint→測試順序建立防呆與紅燈反證"
+  default_prompt: "Use $troy-correct to eliminate recurring agent mistakes with structural checks."

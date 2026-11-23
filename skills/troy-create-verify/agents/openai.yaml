@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Create Verify"
+  short_description: "為專案自動產生或健檢更新 verify-<app> 實機驗證腳本與功能地圖"
+  default_prompt: "Use $troy-create-verify to create or audit a project-local verification skill."
