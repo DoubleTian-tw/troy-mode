@@ -1,6 +1,6 @@
 {
   "name": "troy-mode",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Cross-project AI Agent workflow playbook and skills toolkit for Claude Code, Codex, and Gemini / Antigravity.",
   "type": "module",
   "bin": {

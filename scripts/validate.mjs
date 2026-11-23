@@ -21,6 +21,8 @@ const MANUAL_ONLY_SKILLS = new Set([
   'troy-correct',
   'troy-create-verify',
   'troy-unslop',
+  'troy-pause',
+  'troy-pickup',
 ]);
 
 const errors = [];
@@ -166,7 +168,19 @@ for (const filePath of allFiles) {
   }
 }
 
-// 5. Smoke-test CLI in isolated temp directory
+// 5. Smoke-test CLI and handoff scripts in isolated temp directory
+const pauseCheckpointScript = path.join(ROOT, 'skills', 'troy-pause', 'scripts', 'checkpoint.mjs');
+const pickupCheckpointScript = path.join(ROOT, 'skills', 'troy-pickup', 'scripts', 'checkpoint.mjs');
+const pickupTranscriptsScript = path.join(ROOT, 'skills', 'troy-pickup', 'scripts', 'transcripts.mjs');
+
+if (fs.existsSync(pauseCheckpointScript) && fs.existsSync(pickupCheckpointScript)) {
+  const a = fs.readFileSync(pauseCheckpointScript, 'utf8');
+  const b = fs.readFileSync(pickupCheckpointScript, 'utf8');
+  if (a !== b) {
+    fail('checkpoint.mjs differs between skills/troy-pause/scripts and skills/troy-pickup/scripts');
+  }
+}
+
 const cliPath = path.join(ROOT, 'bin', 'cli.mjs');
 try {
   execFileSync(process.execPath, [cliPath, '--help'], { stdio: 'pipe' });
@@ -203,11 +217,157 @@ try {
       env,
       stdio: 'pipe',
     });
+
+    // Smoke-test checkpoint.mjs (begin -> publish -> read across worktree + missing/drift/sensitive guard)
+    const gitProj = path.join(tmpDir, 'git-repo');
+    const gitWt = path.join(tmpDir, 'git-wt');
+    const otherProj = path.join(tmpDir, 'other-repo');
+    fs.mkdirSync(gitProj, { recursive: true });
+    fs.mkdirSync(otherProj, { recursive: true });
+
+    execFileSync('git', ['init', '-b', 'main'], { cwd: gitProj, stdio: 'pipe' });
+    execFileSync('git', ['config', 'user.email', 'test@example.com'], { cwd: gitProj, stdio: 'pipe' });
+    execFileSync('git', ['config', 'user.name', 'Test'], { cwd: gitProj, stdio: 'pipe' });
+    fs.writeFileSync(path.join(gitProj, 'app.txt'), 'v1\n');
+    execFileSync('git', ['add', 'app.txt'], { cwd: gitProj, stdio: 'pipe' });
+    execFileSync('git', ['commit', '-m', 'init'], { cwd: gitProj, stdio: 'pipe' });
+    execFileSync('git', ['worktree', 'add', '-b', 'feat-x', gitWt], { cwd: gitProj, stdio: 'pipe' });
+
+    // Missing checkpoint should exit 2
+    let missingCode = 0;
+    try {
+      execFileSync(process.execPath, [pickupCheckpointScript, 'read', '--project', gitProj], {
+        env,
+        stdio: 'pipe',
+      });
+    } catch (err) {
+      missingCode = err.status;
+    }
+    if (missingCode !== 2) {
+      throw new Error(`Expected exit code 2 for missing checkpoint, got ${missingCode}`);
+    }
+
+    const beginRes = JSON.parse(
+      execFileSync(process.execPath, [pauseCheckpointScript, 'begin', '--project', gitProj], {
+        env,
+        encoding: 'utf8',
+      })
+    );
+    const checklistPath = path.join(beginRes.directory, 'checklist.md');
+    fs.writeFileSync(checklistPath, '- [x] step 1\n');
+    fs.writeFileSync(
+      beginRes.noteTemplatePath,
+      '# Handoff\n\nSee [checklist](checklist.md).\n'
+    );
+
+    execFileSync(
+      process.execPath,
+      [
+        pauseCheckpointScript,
+        'publish',
+        '--project',
+        gitProj,
+        '--note',
+        beginRes.noteTemplatePath,
+        '--agent',
+        'claude',
+      ],
+      { env, stdio: 'pipe' }
+    );
+
+    // Read from linked worktree should succeed and detect worktree/branch drift
+    const readRes = JSON.parse(
+      execFileSync(process.execPath, [pickupCheckpointScript, 'read', '--project', gitWt], {
+        env,
+        encoding: 'utf8',
+      })
+    );
+    if (readRes.kind !== 'checkpoint' || !readRes.drift.branchChanged || readRes.checkpoint.artifacts.length !== 1) {
+      throw new Error(`Unexpected checkpoint read result: ${JSON.stringify(readRes)}`);
+    }
+
+    // Smoke-test transcripts.mjs across 4 agent formats + cross-project isolation + redaction
+    const realGitProj = fs.realpathSync(gitProj);
+    const claudeSlug = realGitProj.replace(/[^a-zA-Z0-9]/g, '-');
+    const claudeDir = path.join(fakeHome, '.claude', 'projects', claudeSlug);
+    const otherClaudeDir = path.join(fakeHome, '.claude', 'projects', fs.realpathSync(otherProj).replace(/[^a-zA-Z0-9]/g, '-'));
+    fs.mkdirSync(claudeDir, { recursive: true });
+    fs.mkdirSync(otherClaudeDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(claudeDir, 'sess-claude-1.jsonl'),
+      [
+        JSON.stringify({ type: 'mode', sessionId: 'sess-claude-1' }),
+        JSON.stringify({ type: 'user', cwd: realGitProj, sessionId: 'sess-claude-1', gitBranch: 'main', message: { role: 'user', content: 'Fix auth token sk-1234567890abcdefghij' } }),
+        JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', name: 'Edit', input: { file_path: path.join(realGitProj, 'app.txt') } }, { type: 'text', text: 'Updated app.txt' }] } }),
+      ].join('\n') + '\n'
+    );
+    fs.writeFileSync(
+      path.join(otherClaudeDir, 'sess-other.jsonl'),
+      JSON.stringify({ type: 'user', cwd: fs.realpathSync(otherProj), message: { role: 'user', content: 'Secret other project' } }) + '\n'
+    );
+
+    const codexDir = path.join(fakeHome, '.codex', 'sessions', '2026', '11', '23');
+    fs.mkdirSync(codexDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(codexDir, 'rollout-2026-11-23T01-00-00-codex1.jsonl'),
+      [
+        JSON.stringify({ type: 'session_meta', payload: { id: 'codex1', cwd: realGitProj, git: { branch: 'main' } } }),
+        JSON.stringify({ type: 'response_item', payload: { type: 'message', role: 'user', content: [{ type: 'input_text', text: 'Continue parser refactor' }] } }),
+        JSON.stringify({ type: 'response_item', payload: { type: 'message', role: 'assistant', content: [{ type: 'output_text', text: 'Done step 1' }] } }),
+      ].join('\n') + '\n'
+    );
+
+    const agyLogDir = path.join(fakeHome, '.gemini', 'antigravity-cli', 'brain', 'agy-conv-1', '.system_generated', 'logs');
+    fs.mkdirSync(agyLogDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(agyLogDir, 'transcript.jsonl'),
+      [
+        JSON.stringify({ type: 'USER_INPUT', created_at: '2026-11-23T02:00:00Z', content: `<USER_REQUEST>\nInspect ${realGitProj}\n</USER_REQUEST>` }),
+        JSON.stringify({ type: 'PLANNER_RESPONSE', created_at: '2026-11-23T02:00:05Z', content: 'Checked repo', tool_calls: [{ name: 'read_file', args: { Path: path.join(realGitProj, 'app.txt') } }] }),
+      ].join('\n') + '\n'
+    );
+
+    const cursorDir = path.join(fakeHome, '.cursor', 'projects', realGitProj.replace(/^[\\/]+/, '').replace(/[\\/]/g, '-'), 'agent-transcripts', 'cur-1');
+    fs.mkdirSync(cursorDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(cursorDir, 'cur-1.jsonl'),
+      JSON.stringify({ role: 'user', content: 'Check CSS layout' }) + '\n'
+    );
+
+    const listRes = JSON.parse(
+      execFileSync(
+        process.execPath,
+        [pickupTranscriptsScript, 'list', '--project', gitProj, '--source', 'all', '--limit', '10'],
+        { env, encoding: 'utf8' }
+      )
+    );
+    const sources = new Set(listRes.sessions.map((s) => s.source));
+    if (!sources.has('claude') || !sources.has('codex') || !sources.has('antigravity') || !sources.has('cursor')) {
+      throw new Error(`Expected all 4 sources in transcripts list, got: ${[...sources].join(',')}`);
+    }
+    if (listRes.sessions.some((s) => s.id === 'sess-other')) {
+      throw new Error('Cross-project transcript leaked into list output');
+    }
+
+    const extractRes = JSON.parse(
+      execFileSync(
+        process.execPath,
+        [pickupTranscriptsScript, 'extract', '--file', path.join(claudeDir, 'sess-claude-1.jsonl')],
+        { env, encoding: 'utf8' }
+      )
+    );
+    if (
+      extractRes.format !== 'claude' ||
+      extractRes.keyUserMessages[0]?.text.includes('sk-1234567890abcdefghij') ||
+      !extractRes.keyUserMessages[0]?.text.includes('[REDACTED_TOKEN]')
+    ) {
+      throw new Error(`Transcript extraction or redaction failed: ${JSON.stringify(extractRes)}`);
+    }
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
 } catch (err) {
-  fail(`CLI smoke test failed: ${err.message}`);
+  fail(`CLI/handoff smoke test failed: ${err.message}`);
 }
 
 if (errors.length > 0) {

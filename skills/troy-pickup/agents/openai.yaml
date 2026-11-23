@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Pickup"
+  short_description: "跨 Agent 讀取交接檔或撈取四家本機紀錄接續工作"
+  default_prompt: "Use $troy-pickup to resume interrupted work from a handoff checkpoint or prior local agent transcripts."

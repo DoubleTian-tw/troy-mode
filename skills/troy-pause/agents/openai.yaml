@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troy Pause"
+  short_description: "主動暫停任務並寫入跨 Agent 共用的交接檢查點"
+  default_prompt: "Use $troy-pause to save a clean cross-agent handoff checkpoint without altering Git history."

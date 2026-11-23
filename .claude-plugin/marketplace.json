@@ -8,7 +8,7 @@
     {
       "name": "troy-mode",
       "source": "./",
-      "description": "13 modular workflow skills: troy-mode, troy-how, troy-why, troy-blast-radius, troy-grilling, troy-research, troy-teach-me, troy-wait-what, troy-eval, troy-interrogate, troy-correct, troy-create-verify, troy-unslop."
+      "description": "15 modular workflow skills: troy-mode, troy-how, troy-why, troy-blast-radius, troy-grilling, troy-research, troy-teach-me, troy-wait-what, troy-eval, troy-interrogate, troy-correct, troy-create-verify, troy-unslop, troy-pause, troy-pickup."
     }
   ]
 }
